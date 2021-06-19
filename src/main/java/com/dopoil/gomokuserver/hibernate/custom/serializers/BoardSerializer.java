@@ -24,12 +24,16 @@ public class BoardSerializer extends StdSerializer<Board> {
             throws IOException, JsonProcessingException {
 
         jgen.writeStartObject();
+        jgen.writeArrayFieldStart("board");
 
         for(Integer[] i: board.getBoard()){
             jgen.writeStartArray();
             for(Integer j : i){
                 jgen.writeNumber(j);
             }
+            jgen.writeEndArray();
         }
+        jgen.writeEndArray();
+        jgen.writeEndObject();
     }
 }
