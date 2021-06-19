@@ -7,6 +7,7 @@ import com.dopoil.gomokuserver.domain.Move;
 import com.dopoil.gomokuserver.domain.Player;
 import com.dopoil.gomokuserver.exception.GameNotFoundException;
 import com.dopoil.gomokuserver.exception.GameNotJoinableException;
+import com.dopoil.gomokuserver.exception.InvalidMoveException;
 import com.dopoil.gomokuserver.repository.GameRepository;
 import com.dopoil.gomokuserver.service.GameService;
 import lombok.AllArgsConstructor;
@@ -40,7 +41,8 @@ public class GameController {
 
     @PostMapping("/move")
     @ResponseBody
-    public Game move(@RequestBody Move move) throws GameNotFoundException, IOException {
+    public Game move(@RequestBody Move move) throws GameNotFoundException, IOException, InvalidMoveException {
+
         gameService.makeMove(move);
 
         return gameRepository.getById(move.getGameId());

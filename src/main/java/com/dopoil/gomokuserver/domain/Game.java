@@ -12,7 +12,6 @@ import java.util.UUID;
 public class Game {
 
     @Id
-    @GeneratedValue
     private UUID gameId;
 
     @OneToOne(cascade = {CascadeType.ALL})

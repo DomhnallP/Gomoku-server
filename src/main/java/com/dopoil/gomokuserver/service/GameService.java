@@ -4,6 +4,7 @@ import com.dopoil.gomokuserver.config.properties.BoardProperties;
 import com.dopoil.gomokuserver.domain.*;
 import com.dopoil.gomokuserver.exception.GameNotFoundException;
 import com.dopoil.gomokuserver.exception.GameNotJoinableException;
+import com.dopoil.gomokuserver.exception.InvalidMoveException;
 import com.dopoil.gomokuserver.repository.GameRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -25,8 +26,8 @@ public class GameService {
     public Game createGame(Player player){
       Game game = new Game();
       game.setBoard(new Board(
-              boardProperties.getWidth(),
               boardProperties.getHeight(),
+              boardProperties.getWidth(),
               boardProperties.getWinCondition()
               )
       );
@@ -77,7 +78,11 @@ public class GameService {
         return currentGame;
     }
 
-    public Game makeMove(Move move) throws GameNotFoundException, IOException {
+    public Game makeMove(Move move) throws GameNotFoundException, IOException, InvalidMoveException {
+
+        if(!gameRepository.existsById(move.gameId)){
+            throw new GameNotFoundException("Game with Id + " + move.gameId.toString() + " cannot be found");
+        }
 
         if(!gameRepository.existsById(move.gameId)){
             throw new GameNotFoundException("Game with Id + " + move.gameId.toString() + " cannot be found");
@@ -85,13 +90,22 @@ public class GameService {
 
         Game currentGame = gameRepository.getById(move.gameId);
 
+        if(!isMoveLegal(currentGame.getBoard(), move)){
+            throw new InvalidMoveException("That is not a valid move, please try again");
+        }
         currentGame.getBoard().applyMove(move);
 
         currentGame.getBoard().checkForWinner().ifPresent(currentGame::setWinner);
         gameRepository.save(currentGame);
-        playerNotificationService.notifyPlayerOfMoveMade(changePlayer(move.getPlayer(), currentGame), currentGame);
+//        playerNotificationService.notifyPlayerOfMoveMade(changePlayer(move.getPlayer(), currentGame), currentGame);
 
         return currentGame;
+
+    }
+
+    public boolean isMoveLegal(Board board, Move move){
+
+        return board.getBoard()[move.getColumnIndex()][0]!=0 ? false : true;
 
     }
 

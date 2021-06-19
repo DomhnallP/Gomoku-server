@@ -40,7 +40,7 @@ public class Board {
         this.height = height;
         this.width = width;
         this.winCondition = winCondition;
-        this.board = new BoardObject(new Integer[width][height]);
+        this.board = new BoardObject(new Integer[height][width]);
         for(final Integer[] row : board.getData()){
             fill(row, 0);
         }
@@ -71,7 +71,15 @@ public class Board {
     }
 
     public void applyMove(Move move) {
-        this.board.getData()[move.getColumnIndex()][move.getRowIndex()] = move.getType();
+
+        for(int i = this.height-1 ; i>= 0 ; i--) {
+            if (this.board.getData()[i][move.getColumnIndex()] == 0){
+                this.board.getData()[i][move.getColumnIndex()] = move.getType();
+                break;
+            }
+        }
+
+
     }
 
     public Optional<Integer> getWinner() {
@@ -84,7 +92,6 @@ public class Board {
         }
         return winner;
     }
-
 
     public boolean isFull() {
         return stream(board.getData()).flatMap(x -> stream(x)).noneMatch(e -> 0==e);
@@ -119,9 +126,10 @@ public class Board {
 
     private boolean hasVerticalWin(final int winnerType) {
         int actualCount = 0;
-        for (int row = 0; row < board.getData().length; row++) {
-            for (int column = 0; column < board.getData()[row].length; column++) {
-                actualCount = increaseOrResetCount(board.getData()[column][row], winnerType, actualCount);
+        for (int column = 0; column < board.getData()[0].length; column++) {
+            for (int row = 0; row < board.getData().length; row++) {
+
+                actualCount = increaseOrResetCount(board.getData()[row][column], winnerType, actualCount);
                 if (actualCount == winCondition) {
                     return true;
                 }
