@@ -9,14 +9,12 @@ import com.dopoil.gomokuserver.exception.GameNotFoundException;
 import com.dopoil.gomokuserver.exception.GameNotJoinableException;
 import com.dopoil.gomokuserver.exception.InvalidMoveException;
 import com.dopoil.gomokuserver.repository.GameRepository;
-import com.dopoil.gomokuserver.service.GameService;
+import com.dopoil.gomokuserver.service.impl.GameServiceImpl;
 import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
-import java.security.PublicKey;
-import java.util.Objects;
 
 /**
  * The type Game controller.
@@ -26,7 +24,7 @@ import java.util.Objects;
 @RequestMapping
 public class GameController {
 
-    private final GameService gameService;
+    private final GameServiceImpl gameService;
 
     private final GameRepository gameRepository;
 
