@@ -174,7 +174,7 @@ public class Board {
         for (int k = 0 ; k != len ; k++) {
             int r = r0 - k*dr;
             int c = c0 + k*dc;
-            if (r < 0 || c < 0 || r >= width || c > height || board.getData()[r][c] != num) {
+            if (r < 0 || c < 0 || c >= width || r > height || board.getData()[r][c] != num) {
                 return false;
             }
         }
