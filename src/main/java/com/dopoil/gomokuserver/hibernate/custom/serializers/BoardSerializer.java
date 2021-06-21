@@ -18,6 +18,14 @@ public class BoardSerializer extends StdSerializer<Board> {
         super(t);
     }
 
+    /**
+     * Used to serialise the board data array
+     * @param board
+     * @param jgen
+     * @param provider
+     * @throws IOException
+     * @throws JsonProcessingException
+     */
     @Override
     public void serialize(
             Board board, JsonGenerator jgen, SerializerProvider provider)

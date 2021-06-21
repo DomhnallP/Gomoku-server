@@ -12,8 +12,8 @@ import java.util.UUID;
 @Data
 public class Player {
     @Id
-    @GeneratedValue
     private UUID id;
     private String user;
     private URL networkId;
+    private int token;
 }

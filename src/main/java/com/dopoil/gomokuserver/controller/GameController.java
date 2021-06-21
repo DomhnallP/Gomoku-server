@@ -18,6 +18,9 @@ import java.io.IOException;
 import java.security.PublicKey;
 import java.util.Objects;
 
+/**
+ * The type Game controller.
+ */
 @RestController
 @AllArgsConstructor
 @RequestMapping
@@ -27,25 +30,40 @@ public class GameController {
 
     private final GameRepository gameRepository;
 
+    /**
+     * Create New Game.
+     *
+     * @param player the player creating the game
+     * @return the response entity containing the Game Object
+     * @throws GameNotJoinableException the game not joinable exception
+     * @throws IOException              the io exception
+     */
     @PostMapping("/game")
     @ResponseBody
-    public ResponseEntity<Game> createGame (@RequestBody Player player) throws GameNotJoinableException {
+    public ResponseEntity<Game> createGame (@RequestBody Player player) throws GameNotJoinableException, IOException {
 
         if(gameRepository.findByGameStatus(GameStatus.NEW).size()>0) {
+            player.setToken(2);
             return ResponseEntity.ok(gameService.connectToLatestGame(player));
         }
-
+        player.setToken(1);
         return ResponseEntity.ok(gameService.createGame(player));
 
     }
 
+    /**
+     * Apply a Move to an open game by ID.
+     *
+     * @param move the move to be applied to the game
+     * @return the response entity
+     * @throws GameNotFoundException the game not found exception
+     * @throws IOException           the io exception
+     * @throws InvalidMoveException  the invalid move exception
+     */
     @PostMapping("/move")
     @ResponseBody
-    public Game move(@RequestBody Move move) throws GameNotFoundException, IOException, InvalidMoveException {
-
-        gameService.makeMove(move);
-
-        return gameRepository.getById(move.getGameId());
+    public ResponseEntity<Game> move(@RequestBody Move move) throws GameNotFoundException, IOException, InvalidMoveException {
+        return ResponseEntity.ok(gameService.makeMove(move));
     }
 
 }

@@ -1,5 +1,6 @@
 package com.dopoil.gomokuserver.domain;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.sun.istack.NotNull;
 import lombok.Data;
 import org.springframework.context.annotation.Bean;
@@ -9,6 +10,7 @@ import java.util.UUID;
 
 @Entity
 @Data
+@JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 public class Game {
 
     @Id
@@ -20,6 +22,8 @@ public class Game {
     @OneToOne(cascade = {CascadeType.ALL})
     private Player player2;
 
+    private int activeToken;
+
     private GameStatus gameStatus;
 
     @NotNull
@@ -27,5 +31,7 @@ public class Game {
 
     @OneToOne(cascade = {CascadeType.ALL})
     private Board board;
+
+
 
 }
